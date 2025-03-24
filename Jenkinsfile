@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'windows' }  // Ensure it runs on a Windows node
+    agent any // Ensure it runs on a Windows node
 
     environment {
         IMAGE_NAME = 'shubhambhagat05/django_docker'
