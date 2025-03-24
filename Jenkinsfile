@@ -9,7 +9,8 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 bat 'echo Cloning Repository...'
-                bat 'git clone https://github.com/SRCEM-AIML/C3_33_Shubham-Bhagat_Assignment2.git'
+                bat 'git clone https://shubham160305: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github.com/SRCEM-AIML/C3_33_Shubham-Bhagat_Assignment2.git'
+
             }
         }
 
