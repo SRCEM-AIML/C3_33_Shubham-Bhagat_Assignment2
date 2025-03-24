@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'windows' }  // Ensures the pipeline runs on a Windows node
+    agent { label 'windows' }
 
     environment {
         DOCKER_IMAGE = "shubham160305/studentproject:latest"
@@ -8,12 +8,13 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                bat 'echo Cloning Repository...'
-                bat 'git clone https://shubham160305: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github.com/SRCEM-AIML/C3_33_Shubham-Bhagat_Assignment2.git'
-
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
+                        bat 'git clone https://%GIT_USERNAME%:%GIT_PASSWORD%@github.com/SRCEM-AIML/C3_33_Shubham-Bhagat_Assignment2.git'
+                    }
+        }
             }
         }
-
         stage('Build Docker Image') {
             steps {
                 bat 'echo Building Docker Image...'
