@@ -1,43 +1,36 @@
 pipeline {
-    agent
+    agent any
 
     environment {
-        DOCKER_IMAGE = "shubham160305/studentproject:latest"
+        IMAGE_NAME = 'shubhambhagat05/django_docker'
+        CONTAINER_NAME = 'studentproject1'
     }
 
     stages {
         stage('Clone Repository') {
             steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'github-creds', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD')]) {
-                        bat 'git clone https://%GIT_USERNAME%:%GIT_PASSWORD%@github.com/SRCEM-AIML/C3_33_Shubham-Bhagat_Assignment2.git'
-                    }
-        }
+                git branch: 'main', url: 'https://github.com/SRCEM-AIML/C3_33_Shubham-Bhagat_Assignment2.git'
             }
         }
+
         stage('Build Docker Image') {
             steps {
-                bat 'echo Building Docker Image...'
-                bat 'docker build -t %DOCKER_IMAGE% .'
+                bat "docker build -t %IMAGE_NAME% ."
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Push to Docker Hub') {
             steps {
-                withCredentials([string(credentialsId: 'dockerhub-password', variable: 'DOCKER_PASSWORD')]) {
-                    bat 'echo Logging into Docker Hub...'
-                    bat 'echo %DOCKER_PASSWORD% | docker login -u shubham160305 --password-stdin'
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'shubham1', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                        bat """
+                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                        docker push %IMAGE_NAME%
+                        """
+                    }
                 }
-                bat 'echo Pushing Image to Docker Hub...'
-                bat 'docker push %DOCKER_IMAGE%'
             }
         }
 
-        stage('Cleanup') {
-            steps {
-                bat 'echo Cleaning up...'
-                bat 'docker rmi %DOCKER_IMAGE% || echo "No image to remove"'
-            }
-        }
     }
 }
