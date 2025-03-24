@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'windows' }
+    agent
 
     environment {
         DOCKER_IMAGE = "shubham160305/studentproject:latest"
