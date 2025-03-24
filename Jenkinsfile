@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git branch: 'main', url: 'https://github.com/SRCEM-AIML/C3_33_Shubham-Bhagat_Assignment2.git'
+                git branch: 'main', url: 'https://github.com/SRCEM-AIML/C3_33_Shubham-Bhagat_Assignment2'
             }
         }
 
