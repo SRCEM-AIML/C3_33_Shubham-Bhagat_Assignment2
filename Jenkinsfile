@@ -9,7 +9,7 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 echo 'Cloning GitHub repository using SSH...'
-                git branch: 'main', credentialsId: 'shubham1', url: 'git@github.com:SRCEM-AIML/C3_33_Shubham-Bhagat_Assignment2.git'
+                git branch: 'main', credentialsId: 'shubham1', url: 'https://github.com/SRCEM-AIML/C3_33_Shubham-Bhagat_Assignment2.git'
             }
         }
 
