@@ -2,7 +2,7 @@ pipeline {
     agent any  // Run pipeline on any available agent
 
     environment {
-        DOCKER_IMAGE = 'shubhambhagat05/django_docker'  // Replace with your Docker Hub username
+        DOCKER_IMAGE = 'shubhambhagat05/django_docker'  // Replace with your Docker Hub image
     }
 
     stages {
@@ -16,15 +16,15 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                sh 'docker build -t $DOCKER_IMAGE .'
+                bat 'docker build -t %DOCKER_IMAGE% .'
             }
         }
 
         stage('Login to Docker Hub') {
             steps {
                 echo 'Logging in to Docker Hub...'
-                withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
-                    sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                withDockerRegistry([credentialsId: 'shubham1', url: '']) {
+                    bat 'echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin'
                 }
             }
         }
@@ -32,14 +32,14 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 echo 'Pushing Docker image to Docker Hub...'
-                sh 'docker push $DOCKER_IMAGE'
+                bat 'docker push %DOCKER_IMAGE%'
             }
         }
 
         stage('Cleanup') {
             steps {
                 echo 'Cleaning up local Docker images...'
-                sh 'docker rmi $DOCKER_IMAGE || true'
+                bat 'docker rmi %DOCKER_IMAGE% || exit 0'
             }
         }
     }
