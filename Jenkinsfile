@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { label 'windows' }  // Ensure it runs on a Windows node
 
     environment {
         IMAGE_NAME = 'shubhambhagat05/django_docker'
@@ -24,13 +24,12 @@ pipeline {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'shubham1', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                         bat """
-                        echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin
+                        docker login -u %DOCKER_USER% -p %DOCKER_PASS%
                         docker push %IMAGE_NAME%
                         """
                     }
                 }
             }
         }
-
     }
 }
