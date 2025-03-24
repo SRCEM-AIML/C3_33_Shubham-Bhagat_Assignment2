@@ -1,22 +1,22 @@
 pipeline {
-    agent any  // Run pipeline on any available agent
+    agent any
 
     environment {
-        DOCKER_IMAGE = 'shubhambhagat05/django_docker'  // Replace with your Docker Hub image
+        DOCKER_IMAGE = 'shubhambhagat05/django_docker'
     }
 
     stages {
         stage('Clone Repository') {
             steps {
-                echo 'Cloning GitHub repository...'
-                git 'https://github.com/SRCEM-AIML/C3_33_Shubham-Bhagat_Assignment2.git' // Replace with your GitHub repo
+                echo 'Cloning GitHub repository using SSH...'
+                git branch: 'main', credentialsId: 'shubham1', url: 'git@github.com:SRCEM-AIML/C3_33_Shubham-Bhagat_Assignment2.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
                 echo 'Building Docker image...'
-                bat 'docker build -t %DOCKER_IMAGE% .'
+                sh 'docker build -t $DOCKER_IMAGE .'
             }
         }
 
@@ -24,7 +24,7 @@ pipeline {
             steps {
                 echo 'Logging in to Docker Hub...'
                 withDockerRegistry([credentialsId: 'shubham1', url: '']) {
-                    bat 'echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin'
+                    sh 'echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
                 }
             }
         }
@@ -32,14 +32,14 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 echo 'Pushing Docker image to Docker Hub...'
-                bat 'docker push %DOCKER_IMAGE%'
+                sh 'docker push $DOCKER_IMAGE'
             }
         }
 
         stage('Cleanup') {
             steps {
                 echo 'Cleaning up local Docker images...'
-                bat 'docker rmi %DOCKER_IMAGE% || exit 0'
+                sh 'docker rmi $DOCKER_IMAGE || true'
             }
         }
     }
